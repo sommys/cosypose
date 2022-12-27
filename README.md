@@ -104,6 +104,7 @@ The installation may take some time as several packages must be downloaded and i
 Notes:
 
 - We use the [bop_toolkit](https://github.com/thodan/bop_toolkit) to compute some evaluation metrics on T-LESS. To ensure reproducibility, we use our [own fork](https://github.com/ylabbe/bop_toolkit_cosypose) of the repository. It is downloaded in `deps/`.
+- The package `pinocchio` also requires `liburdfdom-tools` to be installed in the system. In Ubuntu, you can install this library by running `sudo apt install liburdfdom-tools`.
 
 # Downloading and preparing data
 
