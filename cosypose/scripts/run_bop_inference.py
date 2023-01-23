@@ -193,6 +193,7 @@ def main():
     parser.add_argument('--id', default=-1, type=int)
     parser.add_argument('--config', default='bop-pbr', type=str)
     parser.add_argument('--nviews', dest='n_views', default=1, type=int)
+    parser.add_argument('--datasets', default=None, type=list)
     parser.add_argument('--icp', action='store_true')
     args = parser.parse_args()
 
@@ -246,7 +247,12 @@ def main():
         ds_names = ['hb', 'tless', 'ycbv']
     else:
         ds_names = ['hb', 'icbin', 'itodd', 'lmo', 'tless', 'tudl', 'ycbv']
-
+    
+    if args.datasets is not None:
+        for ds_name in args.datasets:
+            assert ds_name in ds_names, f'{ds_name} not in {ds_names}'
+        ds_names = args.datasets
+    
     for ds_name in ds_names:
         this_cfg = deepcopy(cfg)
         this_cfg.ds_name = BOP_CONFIG[ds_name]['inference_ds_name'][0]
