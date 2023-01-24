@@ -27,7 +27,7 @@ def run_meshlab_script(in_path, out_path, script, cd_dir=None, has_textures=True
     if has_textures:
         command += ['wt', 'vt']
     command += ['-s', script_path.as_posix()]
-    print(('-'*40) + '\n' + ' '.join(command) + '\n' + ('-'*40))
+    print(' '.join(command) + '\n')
     os.system(' '.join(command))
     script_path.unlink()
     return
