@@ -193,7 +193,7 @@ def main():
     parser.add_argument('--id', default=-1, type=int)
     parser.add_argument('--config', default='bop-pbr', type=str)
     parser.add_argument('--nviews', dest='n_views', default=1, type=int)
-    parser.add_argument('--datasets', default=None, type=list)
+    parser.add_argument('--dataset', default=None, type=str)
     parser.add_argument('--icp', action='store_true')
     args = parser.parse_args()
 
@@ -248,10 +248,9 @@ def main():
     else:
         ds_names = ['hb', 'icbin', 'itodd', 'lmo', 'tless', 'tudl', 'ycbv']
     
-    if args.datasets is not None:
-        for ds_name in args.datasets:
-            assert ds_name in ds_names, f'{ds_name} not in {ds_names}'
-        ds_names = args.datasets
+    if args.dataset is not None:
+        assert args.dataset in ds_names, f'{args.dataset} not in {ds_names}'
+        ds_names = [args.dataset]
     
     for ds_name in ds_names:
         this_cfg = deepcopy(cfg)
