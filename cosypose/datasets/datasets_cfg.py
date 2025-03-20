@@ -41,6 +41,11 @@ def make_scene_dataset(ds_name, n_frames=None):
         ds = _make_tless_dataset('test_primesense')
         ds = keep_bop19(ds)
 
+    # BallValve
+    elif ds_name == 'ballvalve.pbr':
+        ds_dir = BOP_DS_DIR / 'ballvalve'
+        ds = BOPDataset(ds_dir, split='train')
+
     # YCBV
     elif ds_name == 'ycbv.train.real':
         ds_dir = BOP_DS_DIR / 'ycbv'
@@ -154,6 +159,10 @@ def make_object_dataset(ds_name):
     elif ds_name == 'tless.eval' or ds_name == 'tless.bop':
         ds = BOPObjectDataset(BOP_DS_DIR / 'tless/models_eval')
 
+    # BallValve
+    elif ds_name == 'ballvalve':
+        ds = BOPObjectDataset(BOP_DS_DIR / 'ballvalve/models')
+
     # YCBV
     elif ds_name == 'ycbv.bop':
         ds = BOPObjectDataset(BOP_DS_DIR / 'ycbv/models')
@@ -196,6 +205,8 @@ def make_urdf_dataset(ds_name):
         ds = BOPUrdfDataset(LOCAL_DATA_DIR / 'urdfs' / 'tless.cad')
     elif ds_name == 'tless.reconst':
         ds = BOPUrdfDataset(LOCAL_DATA_DIR / 'urdfs' / 'tless.reconst')
+    elif ds_name == 'ballvalve':
+        ds = BOPUrdfDataset(LOCAL_DATA_DIR / 'urdfs' / 'ballvalve')
     elif ds_name == 'ycbv':
         ds = BOPUrdfDataset(LOCAL_DATA_DIR / 'urdfs' / 'ycbv')
     elif ds_name == 'hb':

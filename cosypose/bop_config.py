@@ -1,4 +1,15 @@
 BOP_CONFIG = dict()
+
+BOP_CONFIG['ballvalve'] = dict(
+    input_resize=(640, 640),
+    urdf_ds_name='ballvalve',
+    obj_ds_name='ballvalve',
+    train_pbr_ds_name=['ballvalve.pbr'],
+    inference_ds_name=['ballvalve.pbr'],
+    test_ds_name=[],
+    val_ds_name=[],
+)
+
 BOP_CONFIG['hb'] = dict(
     input_resize=(640, 480),
     urdf_ds_name='hb',
