@@ -14,13 +14,13 @@ from cosypose.config import EXP_DIR
 
 from torch.utils.data import DataLoader, ConcatDataset
 from cosypose.utils.multiepoch_dataloader import MultiEpochDataLoader
-from torchvision.models.utils import load_state_dict_from_url
+from torch.hub import load_state_dict_from_url
 
 from cosypose.datasets.datasets_cfg import make_scene_dataset
 from cosypose.datasets.detection_dataset import DetectionDataset
 from cosypose.datasets.samplers import PartialSampler
 
-from torchvision.models.detection.mask_rcnn import model_urls
+from torchvision.models.detection.mask_rcnn import MaskRCNN_ResNet50_FPN_Weights
 
 from .maskrcnn_forward_loss import h_maskrcnn
 from .detector_models_cfg import create_model_detector, check_update_config
@@ -196,7 +196,7 @@ def train_detector(args):
         logger.info(f'Using pretrained model from {pretrain_path}.')
         model.load_state_dict(torch.load(pretrain_path)['state_dict'])
     elif args.pretrain_coco:
-        state_dict = load_state_dict_from_url(model_urls['maskrcnn_resnet50_fpn_coco'])
+        state_dict = load_state_dict_from_url(MaskRCNN_ResNet50_FPN_Weights.DEFAULT.url)
         keep = lambda k: 'box_predictor' not in k and 'mask_predictor' not in k
         state_dict = {k: v for k, v in state_dict.items() if keep(k)}
         model.load_state_dict(state_dict, strict=False)
