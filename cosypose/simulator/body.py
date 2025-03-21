@@ -29,7 +29,7 @@ class Body:
     @pose.setter
     def pose(self, pose_args):
         pose = parse_pose_args(pose_args)
-        pos, orn = pose.translation, pose.quaternion.coeffs()
+        pos, orn = pose.translation, pose.quaternion
         self._client.resetBasePositionAndOrientation(self._body_id, pos, orn)
 
     def get_state(self):

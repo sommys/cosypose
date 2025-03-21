@@ -80,7 +80,7 @@ class Camera:
     def set_extrinsic_T(self, TWC):
         TWC = Transform(TWC)
         TWCGL = TWC * self.TCCGL
-        xyzw = TWCGL.quaternion.coeffs()
+        xyzw = TWCGL.quaternion
         wxyz = [xyzw[-1], *xyzw[:-1]]
         pitch, roll, yaw = transforms3d.euler.quat2euler(wxyz, axes='sxyz')
         yaw = yaw * 180 / np.pi
