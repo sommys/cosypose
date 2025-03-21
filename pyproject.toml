@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "cosypose"
+version = "1.0.0"
+description = "CosyPose for custom BOP dataset (fork)"
+authors = ["Soma Seres <somaseres@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "cosypose" }]
+
+[tool.poetry.dependencies]
+python = ">=3.12"
+torch = "^2.5.1"
+numpy = "^1.26"
+pillow = "^11.1.0"
+torchvision = "^0.21.0"
+pybullet = "^3.2.7"
+imageio = "^2.37.0"
+simplejson = "^3.20.1"
+opencv-python = "^4.11.0.86"
+opencv-contrib-python = "^4.11.0.86"
+torchnet = "^0.0.4"
+tqdm = "^4.67.1"
+transforms3d = "^0.4.2"
+joblib = "^1.4.2"
+pandas = "^2.2.3"
+xarray = "^2025.3.0"
+bokeh = "^3.7.0"
+plyfile = "^1.1"
+trimesh = "^4.6.5"
+wget = "^3.2"
+pypng = "^0.20220715.0"
+colorama = "^0.4.6"
+eigenpy = "3.2.0"
+scikit-learn = "^1.6.1"
+pyarrow = "^19.0.1"
+
+[tool.poetry.build]
+generate-setup-file = true
+
+[build-system]
+requires = ["setuptools", "wheel", "torch"]
+build-backend = "setuptools.build_meta"
