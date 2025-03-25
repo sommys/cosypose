@@ -42,9 +42,12 @@ def make_scene_dataset(ds_name, n_frames=None):
         ds = keep_bop19(ds)
 
     # BallValve
-    elif ds_name == 'ballvalve.pbr':
+    elif ds_name == 'ballvalve.train':
         ds_dir = BOP_DS_DIR / 'ballvalve'
         ds = BOPDataset(ds_dir, split='train')
+    elif ds_name == "ballvalve.val":
+        ds_dir = BOP_DS_DIR / 'ballvalve'
+        ds = BOPDataset(ds_dir, split='val')
 
     # YCBV
     elif ds_name == 'ycbv.train.real':
