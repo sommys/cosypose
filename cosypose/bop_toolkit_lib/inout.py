@@ -10,7 +10,7 @@ import numpy as np
 import imageio
 import png
 
-import misc
+from . import misc
 
 
 def load_im(path):

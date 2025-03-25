@@ -9,9 +9,9 @@ import argparse
 import subprocess
 import numpy as np
 
-import config
-import inout
-import misc
+from . import config
+from . import inout
+from . import misc
 
 
 # PARAMETERS (some can be overwritten by the command line arguments below).
