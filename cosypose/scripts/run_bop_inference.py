@@ -197,7 +197,8 @@ def main():
     parser.add_argument('--icp', action='store_true')
     args = parser.parse_args()
 
-    init_distributed_mode()
+    device = torch.cuda.current_device()
+    init_distributed_mode(device=device)
 
     cfg = argparse.ArgumentParser('').parse_args([])
 
@@ -221,7 +222,7 @@ def main():
         # cfg.n_workers = 1
 
     if args.id < 0:
-        n_rand = np.random.randint(1e6)
+        n_rand = np.random.randint(int(1e6))
         args.id = n_rand
 
     if args.icp:

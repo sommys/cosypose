@@ -40,7 +40,7 @@ def add_noise(TCO, euler_deg_std=[15, 15, 15], trans_std=[0.01, 0.01, 0.05]):
         [np.random.normal(loc=0, scale=euler_deg_std_i, size=bsz)[:, None]
          for euler_deg_std_i in euler_deg_std], axis=1)
     euler_noise_rad = euler_noise_deg * np.pi / 180
-    R_noise = torch.tensor([transforms3d.euler.euler2mat(*xyz) for xyz in euler_noise_rad]).float().to(device)
+    R_noise = torch.tensor(np.array([transforms3d.euler.euler2mat(*xyz) for xyz in euler_noise_rad])).float().to(device)
 
     trans_noise = np.concatenate(
         [np.random.normal(loc=0, scale=trans_std_i, size=bsz)[:, None]

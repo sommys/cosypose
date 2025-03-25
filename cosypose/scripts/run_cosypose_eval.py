@@ -261,7 +261,8 @@ def main():
             logger.setLevel(logging.DEBUG)
 
     logger.info("Starting ...")
-    init_distributed_mode()
+    device = torch.cuda.current_device()
+    init_distributed_mode(device=device)
 
     parser = argparse.ArgumentParser('Evaluation')
     parser.add_argument('--config', default='tless-bop', type=str)

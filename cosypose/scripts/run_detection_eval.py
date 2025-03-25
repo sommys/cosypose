@@ -7,8 +7,7 @@ import yaml
 import torch
 import argparse
 
-from cosypose.datasets.datasets_cfg import make_scene_dataset
-from cosypose.datasets.bop import remap_bop_targets
+from cosypose.datasets.bop import BOPDataset, remap_bop_targets
 
 from cosypose.evaluation.runner_utils import format_results
 
@@ -23,7 +22,7 @@ from cosypose.evaluation.eval_runner.detection_eval import DetectionEvaluation
 from cosypose.utils.distributed import get_tmp_dir, get_rank
 from cosypose.utils.distributed import init_distributed_mode
 
-from cosypose.config import EXP_DIR
+from cosypose.config import BOP_DS_DIR, EXP_DIR, RESULTS_DIR
 from cosypose.utils.logging import get_logger
 
 import torch.multiprocessing
@@ -77,13 +76,13 @@ def get_meters(scene_ds):
     return meters
 
 
-def run_detection_eval(args, detector=None):
+def run_detection_eval(args, detector=None, split='test'):
     logger.info(f"{'-'*80}")
     for k, v in args.__dict__.items():
         logger.info(f"{k}: {v}")
     logger.info(f"{'-'*80}")
 
-    scene_ds = make_scene_dataset(args.ds_name, n_frames=args.n_frames)
+    scene_ds = scene_ds = BOPDataset(BOP_DS_DIR / args.ds_name, split=split)
 
     pred_kwargs = dict()
     pred_runner = DetectionRunner(scene_ds, batch_size=args.pred_bsz,
@@ -176,7 +175,8 @@ def main():
     parser.add_argument('--models', default='', type=str)
     args = parser.parse_args()
 
-    init_distributed_mode()
+    device = torch.cuda.current_device()
+    init_distributed_mode(device=device)
 
     cfg = argparse.ArgumentParser('').parse_args([])
 
@@ -204,7 +204,7 @@ def main():
     }
 
     if args.id < 0:
-        n_rand = np.random.randint(1e6)
+        n_rand = np.random.randint(int(1e6))
         args.id = n_rand
     save_dir = RESULTS_DIR / f'{args.config}-{args.models}-{args.comment}-{args.id}'
     logger.info(f'Save dir: {save_dir}')

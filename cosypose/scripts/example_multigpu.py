@@ -6,7 +6,8 @@ logger = get_logger(__name__)
 
 
 if __name__ == '__main__':
-    init_distributed_mode()
+    device = torch.cuda.current_device()
+    init_distributed_mode(device=device)
     proc_id = get_rank()
     n_tasks = get_world_size()
     n_cpus = os.environ.get('N_CPUS', 'not specified')

@@ -134,7 +134,7 @@ class DetectionMeter(Meter):
 
         preds_match_merge = xr_merge(preds, matches, on=group_keys+['pred_inst_id'],
                                      dim1='pred_id', dim2='match_id', fill_value=fill_values)
-        preds['iou_valid'] = 'pred_id', preds_match_merge['iou_valid']
+        preds['iou_valid'] = 'pred_id', preds_match_merge['iou_valid'].data
 
         self.datas['gt_df'].append(gt)
         self.datas['pred_df'].append(preds)
@@ -165,7 +165,7 @@ class DetectionMeter(Meter):
 
         def compute_ap(label_df, label_n_gt):
             label_df = label_df.sort_values('score', ascending=False).reset_index(drop=True)
-            label_df['n_tp'] = np.cumsum(label_df[valid_k].values.astype(np.float))
+            label_df['n_tp'] = np.cumsum(label_df[valid_k].values.astype(np.float32))
             label_df['prec'] = label_df['n_tp'] / (np.arange(len(label_df)) + 1)
             label_df['recall'] = label_df['n_tp'] / label_n_gt
             y_true = label_df[valid_k]

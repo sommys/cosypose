@@ -124,7 +124,7 @@ def train_detector(args):
 
     # Initialize distributed
     device = torch.cuda.current_device()
-    init_distributed_mode()
+    init_distributed_mode(device=device)
     world_size = get_world_size()
     args.n_gpus = world_size
     args.global_batch_size = world_size * args.batch_size

@@ -52,7 +52,7 @@ def get_world_size():
     return world_size
 
 
-def init_distributed_mode(initfile=None):
+def init_distributed_mode(initfile=None, device=None):
     assert torch.cuda.device_count() == 1
     rank = int(os.environ.get('SLURM_PROCID', 0))
     world_size = int(os.environ.get('SLURM_NTASKS', 1))
@@ -66,7 +66,8 @@ def init_distributed_mode(initfile=None):
         backend='nccl', rank=rank, world_size=world_size,
         init_method=f'file://{initfile.as_posix()}'
     )
-    torch.distributed.barrier()
+    if device is not None:
+        torch.distributed.barrier(device_ids=[device])
 
 
 def reduce_dict(input_dict, average=True):
