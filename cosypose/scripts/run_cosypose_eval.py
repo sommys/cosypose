@@ -157,6 +157,11 @@ def get_pose_meters(scene_ds):
         targets_filename = None
         n_top = 1
         spheres_overlap_check = False
+    elif "ballvalve" in ds_name:
+        compute_add = True
+        targets_filename = None
+        visib_gt_min = -1
+        n_top = 1
     else:
         raise ValueError
 
@@ -164,6 +169,8 @@ def get_pose_meters(scene_ds):
         object_ds_name = 'tless.eval'
     elif 'ycbv' in ds_name:
         object_ds_name = 'ycbv.bop-compat.eval'  # This is important for definition of symmetric objects
+    elif "ballvalve" in ds_name:
+        object_ds_name = "ballvalve"
     else:
         raise ValueError
 
