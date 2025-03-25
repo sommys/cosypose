@@ -1,17 +1,11 @@
-import cosypose
 import os
-import yaml
 from joblib import Memory
 from pathlib import Path
-import getpass
-import socket
 import torch.multiprocessing
 torch.multiprocessing.set_sharing_strategy('file_system')
 
-hostname = socket.gethostname()
-username = getpass.getuser()
-
-PROJECT_ROOT = Path(cosypose.__file__).parent.parent
+COSYPOSE_HOME = os.environ.get('COSYPOSE_HOME', None)
+PROJECT_ROOT = Path(COSYPOSE_HOME) if COSYPOSE_HOME is not None else Path(__file__).parent.parent
 PROJECT_DIR = PROJECT_ROOT
 DATA_DIR = PROJECT_DIR / 'data'
 LOCAL_DATA_DIR = PROJECT_DIR / 'local_data'
@@ -40,18 +34,3 @@ DEBUG_DATA_DIR.mkdir(exist_ok=True)
 
 ASSET_DIR = DATA_DIR / 'assets'
 MEMORY = Memory(CACHE_DIR, verbose=2)
-
-
-CONDA_PREFIX = os.environ['CONDA_PREFIX']
-if 'CONDA_PREFIX_1' in os.environ:
-    CONDA_BASE_DIR = os.environ['CONDA_PREFIX_1']
-    CONDA_ENV = os.environ['CONDA_DEFAULT_ENV']
-else:
-    CONDA_BASE_DIR = os.environ['CONDA_PREFIX']
-    CONDA_ENV = 'base'
-
-cfg = yaml.load((PROJECT_DIR / 'config_yann.yaml').read_text(), Loader=yaml.FullLoader)
-
-SLURM_GPU_QUEUE = cfg['slurm_gpu_queue']
-SLURM_QOS = cfg['slurm_qos']
-DASK_NETWORK_INTERFACE = cfg['dask_network_interface']
