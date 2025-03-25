@@ -1,0 +1,141 @@
+diff --git a/bop_toolkit_lib/inout.py b/bop_toolkit_lib/inout.py
+index aa54bda..e78377c 100644
+--- a/bop_toolkit_lib/inout.py
++++ b/bop_toolkit_lib/inout.py
+@@ -151,13 +151,13 @@ def load_scene_camera(path):
+   for im_id in scene_camera.keys():
+     if 'cam_K' in scene_camera[im_id].keys():
+       scene_camera[im_id]['cam_K'] = \
+-        np.array(scene_camera[im_id]['cam_K'], np.float).reshape((3, 3))
++        np.array(scene_camera[im_id]['cam_K'], np.float32).reshape((3, 3))
+     if 'cam_R_w2c' in scene_camera[im_id].keys():
+       scene_camera[im_id]['cam_R_w2c'] = \
+-        np.array(scene_camera[im_id]['cam_R_w2c'], np.float).reshape((3, 3))
++        np.array(scene_camera[im_id]['cam_R_w2c'], np.float32).reshape((3, 3))
+     if 'cam_t_w2c' in scene_camera[im_id].keys():
+       scene_camera[im_id]['cam_t_w2c'] = \
+-        np.array(scene_camera[im_id]['cam_t_w2c'], np.float).reshape((3, 1))
++        np.array(scene_camera[im_id]['cam_t_w2c'], np.float32).reshape((3, 1))
+   return scene_camera
+ 
+ 
+@@ -193,9 +193,9 @@ def load_scene_gt(path):
+   for im_id, im_gt in scene_gt.items():
+     for gt in im_gt:
+       if 'cam_R_m2c' in gt.keys():
+-        gt['cam_R_m2c'] = np.array(gt['cam_R_m2c'], np.float).reshape((3, 3))
++        gt['cam_R_m2c'] = np.array(gt['cam_R_m2c'], np.float32).reshape((3, 3))
+       if 'cam_t_m2c' in gt.keys():
+-        gt['cam_t_m2c'] = np.array(gt['cam_t_m2c'], np.float).reshape((3, 1))
++        gt['cam_t_m2c'] = np.array(gt['cam_t_m2c'], np.float32).reshape((3, 1))
+   return scene_gt
+ 
+ 
+@@ -249,9 +249,9 @@ def load_bop_results(path, version='bop19'):
+             'obj_id': int(elems[2]),
+             'score': float(elems[3]),
+             'R': np.array(
+-              list(map(float, elems[4].split())), np.float).reshape((3, 3)),
++              list(map(float, elems[4].split())), np.float32).reshape((3, 3)),
+             't': np.array(
+-              list(map(float, elems[5].split())), np.float).reshape((3, 1)),
++              list(map(float, elems[5].split())), np.float32).reshape((3, 1)),
+             'time': float(elems[6])
+           }
+ 
+@@ -403,9 +403,9 @@ def load_ply(path):
+   model = {}
+   if texture_file is not None:
+     model['texture_file'] = texture_file
+-  model['pts'] = np.zeros((n_pts, 3), np.float)
++  model['pts'] = np.zeros((n_pts, 3), np.float32)
+   if n_faces > 0:
+-    model['faces'] = np.zeros((n_faces, face_n_corners), np.float)
++    model['faces'] = np.zeros((n_faces, face_n_corners), np.float32)
+ 
+   pt_props_names = [p[0] for p in pt_props]
+   face_props_names = [p[0] for p in face_props]
+@@ -413,22 +413,22 @@ def load_ply(path):
+   is_normal = False
+   if {'nx', 'ny', 'nz'}.issubset(set(pt_props_names)):
+     is_normal = True
+-    model['normals'] = np.zeros((n_pts, 3), np.float)
++    model['normals'] = np.zeros((n_pts, 3), np.float32)
+ 
+   is_color = False
+   if {'red', 'green', 'blue'}.issubset(set(pt_props_names)):
+     is_color = True
+-    model['colors'] = np.zeros((n_pts, 3), np.float)
++    model['colors'] = np.zeros((n_pts, 3), np.float32)
+ 
+   is_texture_pt = False
+   if {'texture_u', 'texture_v'}.issubset(set(pt_props_names)):
+     is_texture_pt = True
+-    model['texture_uv'] = np.zeros((n_pts, 2), np.float)
++    model['texture_uv'] = np.zeros((n_pts, 2), np.float32)
+ 
+   is_texture_face = False
+   if {'texcoord'}.issubset(set(face_props_names)):
+     is_texture_face = True
+-    model['texture_uv_face'] = np.zeros((n_faces, 6), np.float)
++    model['texture_uv_face'] = np.zeros((n_faces, 6), np.float32)
+ 
+   # Formats for the binary case.
+   formats = {
+diff --git a/bop_toolkit_lib/pose_error.py b/bop_toolkit_lib/pose_error.py
+index a4463eb..19add64 100644
+--- a/bop_toolkit_lib/pose_error.py
++++ b/bop_toolkit_lib/pose_error.py
+@@ -239,8 +239,8 @@ def cou_mask(mask_est, mask_gt):
+   :param mask_gt: hxw ndarray with the ground-truth mask.
+   :return: The calculated error.
+   """
+-  mask_est_bool = mask_est.astype(np.bool)
+-  mask_gt_bool = mask_gt.astype(np.bool)
++  mask_est_bool = mask_est.astype(bool)
++  mask_gt_bool = mask_gt.astype(bool)
+ 
+   inter = np.logical_and(mask_gt_bool, mask_est_bool)
+   union = np.logical_or(mask_gt_bool, mask_est_bool)
+diff --git a/bop_toolkit_lib/score.py b/bop_toolkit_lib/score.py
+index fdf252b..832d8f9 100644
+--- a/bop_toolkit_lib/score.py
++++ b/bop_toolkit_lib/score.py
+@@ -162,8 +162,8 @@ if __name__ == '__main__':
+   # AP test.
+   tp = np.array([False, True, True, False, True, False])
+   fp = np.logical_not(tp)
+-  tp_c = np.cumsum(tp).astype(np.float)
+-  fp_c = np.cumsum(fp).astype(np.float)
++  tp_c = np.cumsum(tp).astype(np.float32)
++  fp_c = np.cumsum(fp).astype(np.float32)
+   rec = tp_c / tp.size
+   pre = tp_c / (fp_c + tp_c)
+   misc.log('Average Precision: ' + str(calc_ap(rec, pre)))
+diff --git a/bop_toolkit_lib/visualization.py b/bop_toolkit_lib/visualization.py
+index cc02204..dfb75ed 100644
+--- a/bop_toolkit_lib/visualization.py
++++ b/bop_toolkit_lib/visualization.py
+@@ -80,7 +80,7 @@ def depth_for_vis(depth, valid_start=0.2, valid_end=1.0):
+   :return: Transformed depth image.
+   """
+   mask = depth > 0
+-  depth_n = depth.astype(np.float)
++  depth_n = depth.astype(np.float32)
+   depth_n[mask] -= depth_n[mask].min()
+   depth_n[mask] /= depth_n[mask].max() / (valid_end - valid_start)
+   depth_n[mask] += valid_start
+diff --git a/scripts/calc_gt_info.py b/scripts/calc_gt_info.py
+index 5b8c0c1..d7fd549 100644
+--- a/scripts/calc_gt_info.py
++++ b/scripts/calc_gt_info.py
+@@ -181,7 +181,7 @@ for scene_id in scene_ids:
+         depth_im_vis = visualization.depth_for_vis(depth, 0.2, 1.0)
+         depth_im_vis = np.dstack([depth_im_vis] * 3)
+ 
+-        visib_gt_vis = visib_gt.astype(np.float)
++        visib_gt_vis = visib_gt.astype(np.float32)
+         zero_ch = np.zeros(visib_gt_vis.shape)
+         visib_gt_vis = np.dstack([zero_ch, visib_gt_vis, zero_ch])
+ 
+
