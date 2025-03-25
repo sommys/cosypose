@@ -11,7 +11,7 @@ packages = [{ include = "cosypose" }]
 python = ">=3.12"
 torch = "^2.5.1"
 numpy = "^1.26"
-pillow = "^11.1.0"
+pillow = "^10.0.0"
 torchvision = "^0.21.0"
 pybullet = "^3.2.7"
 imageio = "^2.37.0"
