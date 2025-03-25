@@ -14,9 +14,6 @@ DASK_LOGS_DIR = LOCAL_DATA_DIR / 'dasklogs'
 SYNT_DS_DIR = LOCAL_DATA_DIR / 'synt_datasets'
 BOP_DS_DIR = LOCAL_DATA_DIR / 'bop_datasets'
 
-BOP_TOOLKIT_DIR = PROJECT_DIR / 'deps' / 'bop_toolkit_cosypose'
-BOP_CHALLENGE_TOOLKIT_DIR = PROJECT_DIR / 'deps' / 'bop_toolkit_challenge'
-
 EXP_DIR = LOCAL_DATA_DIR / 'experiments'
 RESULTS_DIR = LOCAL_DATA_DIR / 'results'
 DEBUG_DATA_DIR = LOCAL_DATA_DIR / 'debug_data'

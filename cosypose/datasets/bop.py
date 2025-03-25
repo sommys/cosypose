@@ -7,14 +7,10 @@ import pandas as pd
 import torch
 from PIL import Image
 
-from cosypose.config import MEMORY, BOP_TOOLKIT_DIR
+from cosypose.bop_toolkit_lib import inout
+from cosypose.config import MEMORY
 from cosypose.lib3d import Transform
 from cosypose.utils.logging import get_logger
-
-import sys
-sys.path.append(str(BOP_TOOLKIT_DIR))
-from bop_toolkit_lib import inout  # noqa
-sys.path = sys.path[:-1]
 
 
 logger = get_logger(__name__)
@@ -64,7 +60,7 @@ class BOPDataset:
         self.split = split
         self.base_dir = ds_dir / split
 
-        logger.info(f'Building index and loading annotations...')
+        logger.info('Building index and loading annotations...')
         save_file_index = self.ds_dir / f'index_{split}.feather'
         save_file_annotations = self.ds_dir / f'annotations_{split}.pkl'
         build_index(

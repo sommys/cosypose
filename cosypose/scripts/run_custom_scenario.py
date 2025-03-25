@@ -1,24 +1,20 @@
-import torch
-import sys
-import pandas as pd
 import argparse
+import logging
 from pathlib import Path
 import json
 import numpy as np
-import logging
+import pandas as pd
+import torch
 
 from cosypose.datasets.bop_object_datasets import BOPObjectDataset
 from cosypose.lib3d.rigid_mesh_database import MeshDataBase
 from cosypose.integrated.multiview_predictor import MultiviewScenePredictor
 import cosypose.utils.tensor_collection as tc
-from cosypose.rendering.bullet_scene_renderer import BulletSceneRenderer
-from cosypose.visualization.multiview import make_cosypose_plots
-from cosypose.visualization.multiview import make_scene_renderings, nms3d
+from cosypose.visualization.multiview import nms3d
 from cosypose.utils.logging import get_logger
-from cosypose.config import BOP_TOOLKIT_DIR, LOCAL_DATA_DIR
+from cosypose.config import LOCAL_DATA_DIR
+from cosypose.bop_toolkit_lib import inout
 
-sys.path.append(str(BOP_TOOLKIT_DIR))
-from bop_toolkit_lib import inout  # noqa
 
 logger = get_logger(__name__)
 
