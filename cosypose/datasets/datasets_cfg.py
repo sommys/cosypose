@@ -190,7 +190,8 @@ def make_object_dataset(ds_name):
         ds = BOPObjectDataset(BOP_DS_DIR / 'tudl/models')
 
     else:
-        raise ValueError(ds_name)
+        ds = BOPObjectDataset(BOP_DS_DIR / ds_name / "models")
+
     return ds
 
 
@@ -231,7 +232,8 @@ def make_urdf_dataset(ds_name):
     elif ds_name == 'camera':
         ds = OneUrdfDataset(ASSET_DIR / 'camera/model.urdf', 'camera')
     else:
-        raise ValueError(ds_name)
+        ds = BOPUrdfDataset(LOCAL_DATA_DIR / "urdfs" / ds_name)
+
     return ds
 
 
