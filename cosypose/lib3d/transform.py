@@ -1,5 +1,6 @@
 import numpy as np
-from scipy.spatial.transform import Rotation as Rot
+import pinocchio as pin
+
 
 def parse_pose_args(pose_args):
     if len(pose_args) == 2:
@@ -22,31 +23,45 @@ class Transform:
             arg = args[0]
             if isinstance(arg, Transform):
                 self.T = arg.T
-            elif isinstance(arg, np.ndarray) and arg.shape == (4, 4):
+            elif isinstance(arg, pin.SE3):
                 self.T = arg
             else:
-                raise NotImplementedError
+                arg_array = np.asarray(arg)
+                if arg_array.shape == (4, 4):
+                    R = arg_array[:3, :3]
+                    t = arg_array[:3, -1]
+                    self.T = pin.SE3(R, t.reshape(3, 1))
+                else:
+                    raise NotImplementedError
         elif len(args) == 2:
-            arg_0_array = np.asarray(args[0])
-            n_elem_rot = len(arg_0_array.flatten())
+            args_0_array = np.asarray(args[0])
+            n_elem_rot = len(args_0_array.flatten())
             if n_elem_rot == 4:
-                xyzw = np.asarray(args[0]).flatten()
+                xyzw = np.asarray(args[0]).flatten().tolist()
                 wxyz = [xyzw[-1], *xyzw[:-1]]
                 assert len(wxyz) == 4
-                q = Rot.from_quat(wxyz)
-                R = q.as_matrix()
+                q = pin.Quaternion(*wxyz)
+                q.normalize()
+                R = q.matrix()
             elif n_elem_rot == 9:
-                assert arg_0_array.shape == (3, 3)
-                R = arg_0_array
+                assert args_0_array.shape == (3, 3)
+                R = args_0_array
             t = np.asarray(args[1])
             assert len(t) == 3
-            self.T = np.hstack((R, t.reshape(3, 1)))
-            self.T = np.vstack((self.T, np.array([0, 0, 0, 1])))
-        else:
-            raise NotImplementedError
+            self.T = pin.SE3(R, t.reshape(3, 1))
+        elif len(args) == 1:
+            if isinstance(args[0], Transform):
+                raise NotImplementedError
+            elif isinstance(args[0], list):
+                array = np.array(args[0])
+                assert array.shape == (4, 4)
+                self.T = pin.SE3(array)
+            elif isinstance(args[0], np.ndarray):
+                assert args[0].shape == (4, 4)
+                self.T = pin.SE3(args[0])
 
     def __mul__(self, other):
-        T = np.dot(self.T, other.T)
+        T = self.T * other.T
         return Transform(T)
 
     def __matmul__(self, other):
@@ -55,12 +70,7 @@ class Transform:
         return self.__mul__(other)
 
     def inverse(self):
-        R_inv = self.T[:3, :3].T
-        t_inv = -np.dot(R_inv, self.T[:3, 3])
-        T_inv = np.eye(4)
-        T_inv[:3, :3] = R_inv
-        T_inv[:3, 3] = t_inv
-        return Transform(T_inv)
+        return Transform(self.T.inverse())
 
     def __str__(self):
         return str(self.T)
@@ -72,14 +82,12 @@ class Transform:
         return 7
 
     def toHomogeneousMatrix(self):
-        return self.T
+        return self.T.homogeneous
 
     @property
     def translation(self):
-        return self.T[:3, 3]
+        return self.T.translation.reshape(3)
 
     @property
     def quaternion(self):
-        R = self.T[:3, :3]
-        q = Rot.from_matrix(R).as_quat()
-        return q
+        return pin.Quaternion(self.T.rotation)

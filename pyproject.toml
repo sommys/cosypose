@@ -32,6 +32,7 @@ pypng = "^0.20220715.0"
 colorama = "^0.4.6"
 scikit-learn = "^1.6.1"
 pyarrow = "^19.0.1"
+pin = "<3"
 
 [tool.poetry.build]
 generate-setup-file = true
