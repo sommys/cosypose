@@ -37,23 +37,25 @@ def record_dataset_local(
         all_keys = []
     seeds = list(seeds)
 
-    # with multiprocessing.Pool(n_workers) as pool:
-    #     results = list(
-    #         tqdm(
-    #             pool.imap(
-    #                 process_seed,
-    #                 [
-    #                     (ds_dir, seed, n_frames_per_chunk, scene_kwargs)
-    #                     for seed in seeds
-    #                 ],
-    #             ),
-    #             total=len(seeds),
-    #         )
-    #     )
-    results = []
-    for seed in tqdm(seeds, desc="Processing seeds"):
-        keys, _ = process_seed((ds_dir, seed, n_frames_per_chunk, scene_kwargs))
-        results.append((keys, seed))
+    if n_workers > 1:
+        with multiprocessing.Pool(n_workers) as pool:
+            results = list(
+                tqdm(
+                    pool.imap(
+                        process_seed,
+                        [
+                            (ds_dir, seed, n_frames_per_chunk, scene_kwargs)
+                            for seed in seeds
+                        ],
+                    ),
+                    total=len(seeds),
+                )
+            )
+    else:
+        results = []
+        for seed in tqdm(seeds, desc="Processing seeds"):
+            keys, _ = process_seed((ds_dir, seed, n_frames_per_chunk, scene_kwargs))
+            results.append((keys, seed))
 
     seeds_file = open(  # pylint: disable=unspecified-encoding
         ds_dir / "seeds_recorded.txt", "a"
