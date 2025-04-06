@@ -76,7 +76,9 @@ def record_dataset_local(
 
 def record_dataset(args):
     if args.resume and not args.overwrite:
-        resume_args = yaml.safe_load((Path(args.resume) / "config.yaml").read_text())
+        resume_args = yaml.load(
+            (Path(args.resume) / "config.yaml").read_text(), Loader=yaml.UnsafeLoader
+        )
         vars(args).update(
             {k: v for k, v in vars(resume_args).items() if "resume" not in k}
         )
@@ -91,7 +93,6 @@ def record_dataset(args):
             raise ValueError("There is already a dataset with this name")
     args.ds_dir.mkdir(exist_ok=True)
 
-    print(type(args))
     (args.ds_dir / "config.yaml").write_text(yaml.dump(args))
 
     all_keys = record_dataset_local(
