@@ -34,10 +34,9 @@ def make_cfg(
         gpu_renderer=False,
         texture_ds="shapenet",
         domain_randomization=True,
-        n_objects_interval=(1, 4),
-        proba_falling=0.0,
+        proba_falling=0.5,
         border_check=False,
-        n_textures_cache=30,
+        n_textures_cache=50,
         objects_xyz_interval=((-0.25, -0.25, 0.0), (0.25, 0.25, 0.25)),
         focal_interval=((1060, 1060), (1080, 1080)),
     )
@@ -46,6 +45,7 @@ def make_cfg(
     if cfg_name == "ycbv":
         cfg.scene_kwargs.update(
             urdf_ds="ycbv",
+            n_objects_interval=(1, 9),
             resolution=(640, 480),
             textures_on_objects=False,
             camera_distance_interval=(0.5, 1.5),
@@ -55,6 +55,7 @@ def make_cfg(
         cfg.scene_kwargs.update(
             urdf_ds="tless.cad",
             resolution=(720, 540),
+            n_objects_interval=(1, 9),
             textures_on_objects=True,
             camera_distance_interval=(0.65, 0.94),
         )
@@ -66,8 +67,9 @@ def make_cfg(
         cfg.scene_kwargs.update(
             urdf_ds=cfg_name,
             resolution=(640, 640),
-            textures_on_objects=False,
-            camera_distance_interval=(1.0, 2.0),
+            n_objects_interval=(1, 5),
+            textures_on_objects=True,
+            camera_distance_interval=(0.5, 1.5),
         )
 
     if debug:
