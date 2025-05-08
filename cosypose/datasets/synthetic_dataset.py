@@ -25,8 +25,8 @@ class SyntheticSceneDataset:
         )
         self.object_set = self.cfg.scene_kwargs["urdf_ds"]
         self.keys = keys
-
         urdf_ds_name = self.cfg.scene_kwargs["urdf_ds"]
+        self.name = urdf_ds_name
         urdf_ds = make_urdf_dataset(urdf_ds_name)
         self.all_labels = [obj["label"] for _, obj in urdf_ds.index.iterrows()]
         self.frame_index = pd.DataFrame(
