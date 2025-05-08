@@ -73,6 +73,8 @@ def make_scene_dataset(ds_name, n_frames=None):
             scene_id, view_id = l_n.split('/')
             scene_id, view_id = int(scene_id), int(view_id)
             mask = (frame_index['scene_id'] == scene_id) & (frame_index['view_id'] == view_id)
+            if len(np.where(mask)[0]) == 0:
+                continue
             ids.append(np.where(mask)[0].item())
         ds.frame_index = frame_index.iloc[ids].reset_index(drop=True)
 
