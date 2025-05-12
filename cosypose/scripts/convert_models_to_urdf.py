@@ -9,11 +9,12 @@ from cosypose.datasets.datasets_cfg import make_object_dataset
 from cosypose.libmesh import obj_to_urdf
 
 
-def convert_obj_dataset_to_urdfs(obj_ds_name):
+def convert_obj_dataset_to_urdfs(obj_ds_name, tqdm_disable=False):
     obj_dataset = make_object_dataset(obj_ds_name)
     urdf_dir = LOCAL_DATA_DIR / "urdfs" / obj_ds_name
     urdf_dir.mkdir(exist_ok=True, parents=True)
-    for n in tqdm(range(len(obj_dataset))):
+    iterator = range(len(obj_dataset)) if tqdm_disable else tqdm(range(len(obj_dataset)))
+    for n in iterator:
         obj = obj_dataset[n]
         ply_path = Path(obj["mesh_path"])
         out_dir = urdf_dir / obj["label"]
