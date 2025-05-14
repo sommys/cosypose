@@ -14,11 +14,13 @@ torch.multiprocessing.set_sharing_strategy("file_system")
 
 
 class SyntheticSceneDataset:
-    def __init__(self, ds_dir, train=True):
+    def __init__(self, ds_dir, train=True, eval_mode=False):
         self.ds_dir = Path(ds_dir)
         assert self.ds_dir.exists()
-
-        keys_path = ds_dir / (("train" if train else "val") + "_keys.pkl")
+        key_file = "train" if train else "val"
+        if eval_mode:
+            key_file = key_file + "_eval"
+        keys_path = ds_dir / f"{key_file}_keys.pkl"
         keys = pkl.loads(keys_path.read_bytes())
         self.cfg = yaml.load(
             (ds_dir / "config.yaml").read_text(), Loader=yaml.UnsafeLoader
