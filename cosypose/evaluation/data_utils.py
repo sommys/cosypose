@@ -9,6 +9,12 @@ def parse_obs_data(obs):
     data = defaultdict(list)
     frame_info = obs['frame_info']
     TWC = torch.as_tensor(obs['camera']['TWC']).float()
+    if not obs['objects']:
+        info = dict(scene_id=frame_info['scene_id'],
+                    view_id=frame_info['view_id'])
+        data['bboxes'].append(torch.zeros(4))
+        data['TWO'].append(torch.eye(4))
+
     for n, obj in enumerate(obs['objects']):
         info = dict(frame_obj_id=n,
                     label=obj['name'],

@@ -51,7 +51,8 @@ class MultiviewPredictionRunner:
 
                 K.append(obs['camera']['K'])
                 cam_infos.append(cam_info)
-
+                if not obs['objects']:
+                    det_infos.append(im_info)
                 for o, obj in enumerate(obs['objects']):
                     obj_info = dict(
                         label=obj['name'],
@@ -63,7 +64,7 @@ class MultiviewPredictionRunner:
 
         gt_detections = tc.PandasTensorCollection(
             infos=pd.DataFrame(det_infos),
-            bboxes=torch.as_tensor(np.stack(bboxes)),
+            bboxes=torch.as_tensor(np.stack(bboxes)) if bboxes else torch.empty((0, 4)),
         )
         cameras = tc.PandasTensorCollection(
             infos=pd.DataFrame(cam_infos),
