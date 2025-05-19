@@ -245,7 +245,7 @@ class BopRecordingScene(BaseScene):
                 self._full_rand(**kwargs)
                 return
             except SamplerError as e:
-                print("Sampling failed: ", e)
+                # print("Sampling failed: ", e)
                 n_iter += 1
         raise SamplerError("Sampling failed")
 

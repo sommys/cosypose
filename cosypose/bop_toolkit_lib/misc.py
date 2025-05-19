@@ -24,8 +24,8 @@ def log(s):
     utc_now = pytz.utc.localize(datetime.datetime.utcnow())
     # pst_now = utc_now.astimezone(pytz.timezone("America/Los_Angeles"))
     utc_now_str = (
-      f"{utc_now.month}/{utc_now.day:02d}|"
-      f"{utc_now.hour:02d}:{utc_now.minute:02d}:{utc_now.second:02d}"
+        f"{utc_now.month}/{utc_now.day:02d}|"
+        f"{utc_now.hour:02d}:{utc_now.minute:02d}:{utc_now.second:02d}"
     )
 
     # sys.stdout.write('{}: {}\n'.format(time.strftime('%m/%d|%H:%M:%S'), s))
@@ -104,7 +104,7 @@ def project_pts(pts, K, R, t):  # pylint: disable=invalid-name
     :return: nx2 ndarray with 2D image coordinates of the projections.
     """
     assert pts.shape[1] == 3
-    P = K.dot(np.hstack((R, t))) # pylint: disable=invalid-name
+    P = K.dot(np.hstack((R, t)))  # pylint: disable=invalid-name
     pts_h = np.hstack((pts, np.ones((pts.shape[0], 1))))
     pts_im = P.dot(pts_h.T)
     pts_im /= pts_im[2, :]
@@ -363,8 +363,8 @@ def get_error_signature(error_type, n_top, **kwargs):
         if kwargs["vsd_tau"] == float("inf"):
             vsd_tau_str = "inf"
         else:
-            vsd_tau_str = f"{kwargs["vsd_tau"]:.3f}"
-        error_sign += f"_delta={kwargs["vsd_delta"]:.3f}_tau={vsd_tau_str}"
+            vsd_tau_str = f"{kwargs['vsd_tau']:.3f}"
+        error_sign += f"_delta={kwargs['vsd_delta']:.3f}_tau={vsd_tau_str}"
     return error_sign
 
 

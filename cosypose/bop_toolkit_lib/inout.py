@@ -75,7 +75,7 @@ def load_json(path, keys_to_int=False):
     def convert_keys_to_int(x):
         return {int(k) if k.lstrip("-").isdigit() else k: v for k, v in x.items()}
 
-    with open(path, "r") as f: # pylint: disable=unspecified-encoding
+    with open(path, "r") as f:  # pylint: disable=unspecified-encoding
         if keys_to_int:
             content = json.load(f, object_hook=convert_keys_to_int)
         else:
@@ -90,7 +90,7 @@ def save_json(path, content):
     :param path: Path to the output JSON file.
     :param content: Dictionary/list to save.
     """
-    with open(path, "w") as f: # pylint: disable=unspecified-encoding
+    with open(path, "w") as f:  # pylint: disable=unspecified-encoding
 
         if isinstance(content, dict):
             f.write("{\n")
@@ -235,7 +235,7 @@ def load_bop_results(path, version="bop19"):
     # See docs/bop_challenge_2019.md for details.
     if version == "bop19":
         header = "scene_id,im_id,obj_id,score,R,t,time"
-        with open(path, "r") as f: # pylint: disable=unspecified-encoding
+        with open(path, "r") as f:  # pylint: disable=unspecified-encoding
             line_id = 0
             for line in f:
                 line_id += 1
@@ -289,14 +289,14 @@ def save_bop_results(path, results, version="bop19"):
             im_id = res["im_id"]
             obj_id = res["obj_id"]
             score = res["score"]
-            R=" ".join(map(str, res["R"].flatten().tolist())) # pylint: disable=invalid-name
-            t=" ".join(map(str, res["t"].flatten().tolist()))
+            R = " ".join(
+                map(str, res["R"].flatten().tolist())
+            )  # pylint: disable=invalid-name
+            t = " ".join(map(str, res["t"].flatten().tolist()))
             time = run_time
-            lines.append(
-                f"{scene_id},{im_id},{obj_id},{score},{R},{t},{time}"
-            )
+            lines.append(f"{scene_id},{im_id},{obj_id},{score},{R},{t},{time}")
 
-        with open(path, "w") as f: # pylint: disable=unspecified-encoding
+        with open(path, "w") as f:  # pylint: disable=unspecified-encoding
             f.write("\n".join(lines))
 
     else:
@@ -319,20 +319,20 @@ def check_bop_results(path, version="bop19"):
             # Check if the time for all estimates from the same image are the same.
             times = {}
             for result in results:
-                result_key = f"{result["scene_id"]:06d}_{result["im_id"]:06d}"
+                result_key = f'{result["scene_id"]:06d}_{result["im_id"]:06d}'
                 if result_key in times:
                     if abs(times[result_key] - result["time"]) > 0.001:
                         check_passed = False
                         check_msg = (
-                            f"The running time for scene {result["scene_id"]} and "
-                            f"image {result["im_id"]} is not the same for all estimates."
+                            f'The running time for scene {result["scene_id"]} and '
+                            f'image {result["im_id"]} is not the same for all estimates.'
                         )
                         misc.log(check_msg)
                         break
                 else:
                     times[result_key] = result["time"]
 
-    except Exception as e: # pylint: disable=broad-except
+    except Exception as e:  # pylint: disable=broad-except
         check_passed = False
         check_msg = f"Error when loading BOP results: {e}"
         misc.log(check_msg)
@@ -609,7 +609,7 @@ def save_ply2(
         if not np.isnan(np.sum(pt)):
             valid_pts_count += 1
 
-    f = open(path, "w") # pylint: disable=unspecified-encoding
+    f = open(path, "w")  # pylint: disable=unspecified-encoding
     f.write(
         "ply\n"
         "format ascii 1.0\n"

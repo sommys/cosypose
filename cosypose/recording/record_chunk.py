@@ -4,8 +4,26 @@ import importlib
 from pathlib import Path
 from PIL import Image
 from io import BytesIO
+import sys
+import os
 
 from deps.cosypose.cosypose.recording.bop_recording_scene import BopRecordingScene
+
+
+class SuppressStdout:
+    def __enter__(self):
+        self._stdout_fd = sys.__stdout__.fileno()
+        self._stderr_fd = sys.__stderr__.fileno()
+        self._stdout_copy = os.dup(self._stdout_fd)
+        self._stderr_copy = os.dup(self._stderr_fd)
+        self._devnull = os.open(os.devnull, os.O_WRONLY)
+        os.dup2(self._devnull, self._stdout_fd)
+        os.dup2(self._devnull, self._stderr_fd)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        os.dup2(self._stdout_copy, self._stdout_fd)
+        os.dup2(self._stderr_copy, self._stderr_fd)
+        os.close(self._devnull)
 
 
 def get_cls(cls_str):
@@ -60,14 +78,14 @@ def record_chunk(ds_dir, scene_kwargs, seed, n_frames):
 
     scene_kwargs["seed"] = seed
     scene = BopRecordingScene(**scene_kwargs)
-
-    scene.connect(load=True)
+    with SuppressStdout():
+        scene.connect(load=True)
     state_list = []
     for _ in range(n_frames):
         state = scene.make_new_scene()
         state_list.append(state)
     keys = write_chunk(state_list, seed, ds_dir)
-
-    scene.disconnect()
+    with SuppressStdout():
+        scene.disconnect()
     del scene
     return keys, seed
